@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra w wisielca</title>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <h1>Gra w wisielca</h1>
+    
+    <div>
+        <input type="text" id="letterInput" placeholder="Podaj literę">
+        <button id="guessButton">Sprawdź</button>
+    </div>
+    
+    <div>
+        <p>Liczba prób: <span id="totalGuesses">0</span></p>
+        <p>Liczba nietrafionych prób: <span id="wrongGuesses">0</span></p>
+    </div>
+    
+    <div id="wordDisplay">
+        
+    </div>
+    
+    <div id="message">
+        
+    </div>
+    
+    <script>
+        const slowa = ["domek", "pies", "auto", "szkola", "komputer"];
+        const tajneSlowo = slowa[Math.floor(Math.random() * slowa.length)];
+        let zgadnieteLitery = [];
+        let totalGuesses = 0;
+        let wrongGuesses = 0;
+
+        const letterInput = document.getElementById("letterInput");
+        const guessButton = document.getElementById("guessButton");
+        const totalGuessesDisplay = document.getElementById("totalGuesses");
+        const wrongGuessesDisplay = document.getElementById("wrongGuesses");
+        const wordDisplay = document.getElementById("wordDisplay");
+        const message = document.getElementById("message");
+
+        function czyWygrana() {
+            for (const litera of tajneSlowo) {
+                if (!zgadnieteLitery.includes(litera)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function sprawdzLiterę() {
+            const litera = letterInput.value.toLowerCase();
+            
+            if (litera.length === 1 && litera.match(/[a-z]/)) {
+                if (tajneSlowo.includes(litera)) {
+                    if (!zgadnieteLitery.includes(litera)) {
+                        zgadnieteLitery.push(litera);
+                        odswiezSłowo();
+                        if (czyWygrana()) {
+                            message.textContent = "Wygrałeś!";
+                            guessButton.disabled = true;
+                        }
+                    } else {
+                        message.textContent = "Ta litera została już zgadnięta.";
+                    }
+                } else {
+                    if (!zgadnieteLitery.includes(litera)) {
+                        wrongGuesses++;
+                        odswiezSłowo();
+                        if (wrongGuesses >= 6) {
+                            message.textContent = `Przegrałeś. Tajne słowo to "${tajneSlowo}".`;
+                            guessButton.disabled = true;
+                        }
+                    } else {
+                        message.textContent = "Ta litera została już zgadnięta.";
+                    }
+                }
+                totalGuesses++;
+                totalGuessesDisplay.textContent = totalGuesses;
+                wrongGuessesDisplay.textContent = wrongGuesses;
+            } else {
+                message.textContent = "Podaj pojedynczą literę z alfabetu.";
+            }
+
+            letterInput.value = "";
+        }
+
+        function odswiezSłowo() {
+            let wyraz = "";
+            for (const litera of tajneSlowo) {
+                if (zgadnieteLitery.includes(litera)) {
+                    wyraz += litera + " ";
+                } else {
+                    wyraz += "_ ";
+                }
+            }
+            wordDisplay.textContent = wyraz;
+        }
+
+        guessButton.addEventListener("click", sprawdzLiterę);
+        odswiezSłowo();
+    </script>
+</body>
+</html>

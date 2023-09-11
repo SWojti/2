@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Zadań</title>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <h1>Lista Zadań</h1>
+    
+    <div>
+        <input type="text" id="taskInput" placeholder="Dodaj nowe zadanie">
+        <button onclick="addTask()">Dodaj</button>
+    </div>
+    
+    <ul id="taskList">
+        
+    </ul>
+    
+    <script>
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+
+        function addTask() {
+            const taskText = taskInput.value.trim();
+
+            if (taskText !== "") {
+                const li = document.createElement("li");
+                li.textContent = taskText;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Usuń";
+                deleteButton.onclick = function() {
+                    taskList.removeChild(li);
+                };
+
+                li.appendChild(deleteButton);
+                taskList.appendChild(li);
+
+                taskInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
